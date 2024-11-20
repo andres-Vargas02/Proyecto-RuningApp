@@ -15,16 +15,17 @@ import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailScreen(navController: NavController) {
+fun RaceScreen(navController: NavController) {
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Detalle de Carrera") }) }
+        topBar = { TopAppBar(title = { Text("Registro de Carrera") }) }
     ) { paddingValues ->
         Column(modifier = Modifier.fillMaxSize().padding(paddingValues).padding(16.dp)) {
-            Text("Detalles de la carrera:")
-            Text("Distancia: 5 km")
-            Text("Duración: 30 min")
-            Button(onClick = { navController.navigate("inicio") }) {
-                Text("Volver a Inicio")
+            Text("Inicio y detención del seguimiento")
+            Button(onClick = { /* lógica para iniciar carrera */ }) {
+                Text("Iniciar Carrera")
+            }
+            Button(onClick = { /* lógica para detener carrera */ }) {
+                Text("Detener Carrera")
             }
         }
     }

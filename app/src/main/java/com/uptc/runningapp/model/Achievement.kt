@@ -1,4 +1,7 @@
-package com.uptc.runningapp.model;
+package com.uptc.runningapp.model
 
-public class Achievement {
-}
+data class Achievement(
+    val achievementId: String,
+    val title: String,
+    val achievementDate: String
+)
