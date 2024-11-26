@@ -14,22 +14,22 @@ import com.uptc.runningapp.ui.screens.RaceScreen
 import com.uptc.runningapp.ui.screens.SignUpScreen
 
 @Composable
-fun AppNavHost(races: List<Race>) { // Se agrega el parámetro 'races' en AppNavHost
+fun AppNavHost(races: List<Race>) {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = "login") {
         composable("login") { LoginScreen(navController) }
         composable("registro") { SignUpScreen(navController) }
-        composable("inicio") { FeedScreen(navController, races) } // Se pasa 'races' aquí
+        composable("inicio") { FeedScreen(navController, races) }
         composable("perfil") { ProfileScreen(navController, races) }
-        composable("registro_carrera") { RaceScreen(navController, races) } // Se pasa 'races' aquí
+        composable("registro_carrera") { RaceScreen(navController, races) }
         composable("detalle_carrera/{raceId}") { backStackEntry ->
-            val raceId = backStackEntry.arguments?.getString("raceId") // Obtiene el ID de la carrera
-            val selectedRace = races.find { it.raceId == raceId } // Busca la carrera en la lista
+            val raceId = backStackEntry.arguments?.getString("raceId")
+            val selectedRace = races.find { it.raceId == raceId }
             if (selectedRace != null) {
-                DetailScreen(navController, selectedRace) // Pasa la carrera seleccionada
+                DetailScreen(navController, selectedRace)
             } else {
-                // Maneja el caso de error (por ejemplo, muestra un mensaje)
+
                 Text("Carrera no encontrada")
             }
         }

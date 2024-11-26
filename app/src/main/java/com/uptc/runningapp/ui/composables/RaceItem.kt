@@ -14,11 +14,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.ConstraintLayoutScope
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.uptc.runningapp.R // Asegúrate de que este paquete coincida con tu estructura
+import com.uptc.runningapp.R
 import com.uptc.runningapp.model.Race
 
 /**
@@ -37,10 +35,7 @@ fun RaceItem(navController: NavController, race: Race) {
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         ConstraintLayout(modifier = Modifier.padding(8.dp)) {
-            // Referencias para la disposición de los elementos
             val (icon, raceInfo) = createRefs()
-
-            // Ícono representativo de la carrera
             Image(
                 painter = painterResource(id = R.drawable.ic_race), // Asegúrate de que este recurso exista
                 contentDescription = "Race Icon",
@@ -52,8 +47,6 @@ fun RaceItem(navController: NavController, race: Race) {
                         top.linkTo(parent.top)
                     }
             )
-
-            // Información de la carrera
             Column(
                 modifier = Modifier
                     .padding(start = 8.dp)

@@ -35,10 +35,9 @@ fun BottomBar(navController: NavController) {
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(modifier = Modifier.padding(8.dp)) {
-            // Home Button
             IconButton(
                 onClick = { navController.navigate("inicio") },
-                modifier = Modifier.weight(1f) // Reparte el espacio horizontalmente
+                modifier = Modifier.weight(1f)
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_home),
@@ -46,10 +45,9 @@ fun BottomBar(navController: NavController) {
                     modifier = Modifier.size(24.dp)
                 )
             }
-            // Profile Button
             IconButton(
                 onClick = { navController.navigate("perfil") },
-                modifier = Modifier.weight(1f) // Reparte el espacio horizontalmente
+                modifier = Modifier.weight(1f)
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_profile),
@@ -57,10 +55,9 @@ fun BottomBar(navController: NavController) {
                     modifier = Modifier.size(24.dp)
                 )
             }
-            // Race Button
             IconButton(
                 onClick = { navController.navigate("registro_carrera") },
-                modifier = Modifier.weight(1f) // Reparte el espacio horizontalmente
+                modifier = Modifier.weight(1f)
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_race),
