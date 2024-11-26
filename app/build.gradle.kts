@@ -67,5 +67,11 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.mysql.connector.java)
+    implementation(libs.mssql.jdbc)
+    implementation(libs.androidx.core.ktx.v190)
+    implementation(libs.ui)
+    implementation(libs.mssql.jdbc.v1220jre8)
+    implementation(libs.jtds)
 
 }
