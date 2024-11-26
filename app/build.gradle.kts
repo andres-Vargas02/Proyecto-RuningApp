@@ -70,5 +70,8 @@ dependencies {
     implementation(libs.mysql.connector.java)
     implementation(libs.mssql.jdbc)
     implementation(libs.androidx.core.ktx.v190)
-    implementation("androidx.compose.ui:ui:1.7.5")
+    implementation(libs.ui)
+    implementation(libs.mssql.jdbc.v1220jre8)
+    implementation(libs.jtds)
+
 }

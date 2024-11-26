@@ -4,11 +4,20 @@ import java.sql.Connection
 import java.sql.DriverManager
 
 object DatabaseConfig {
-    private const val JDBC_URL = "jdbc:sqlserver://RunningAppDB.mssql.somee.com:1433;databaseName=RunningAppDB;TrustServerCertificate=True"
-    private const val DB_USER = "julies18_SQLLogin_1"
-    private const val DB_PASSWORD = "x7jxz7xwci"
+    init {
+        try {
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver")
+        } catch (e: ClassNotFoundException) {
+            throw RuntimeException("SQL Server JDBC Driver not found. Include it in your library path", e)
+        }
+    }
+
+    private const val JDBC_URL = "jdbc:jtds:sqlserver://RunningAppDB.mssql.somee.com:1433/RunningAppDB;" +
+            "user=julies18_SQLLogin_1;" +
+            "password=x7jxz7xwci;" +
+            "encrypt=false;"
 
     fun getConnection(): Connection {
-        return DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD)
+        return DriverManager.getConnection(JDBC_URL)
     }
 }

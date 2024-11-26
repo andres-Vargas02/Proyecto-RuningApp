@@ -34,7 +34,7 @@ fun LoginScreen(navController: NavController) {
         isLoading.value = false
 
         if (isValid) {
-            navController.navigate("home")
+            navController.navigate("Inicio")
         } else {
             errorMessage.value = "Credenciales incorrectas."
         }
