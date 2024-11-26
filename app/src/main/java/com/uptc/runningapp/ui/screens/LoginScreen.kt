@@ -20,25 +20,7 @@ fun LoginScreen(navController: NavController) {
     val password = remember { mutableStateOf("") }
     val isLoading = remember { mutableStateOf(false) }
     val errorMessage = remember { mutableStateOf("") }
-
-    LaunchedEffect(email.value, password.value) {
-        if (email.value.isEmpty() || password.value.isEmpty()) {
-            errorMessage.value = "Por favor, completa todos los campos."
-            return@LaunchedEffect
-        }
-
-        isLoading.value = true
-        val isValid = withContext(Dispatchers.IO) {
-            UserRepository.validateLogin(email.value, password.value)
-        }
-        isLoading.value = false
-
-        if (isValid) {
-            navController.navigate("Inicio")
-        } else {
-            errorMessage.value = "Credenciales incorrectas."
-        }
-    }
+    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
@@ -72,7 +54,26 @@ fun LoginScreen(navController: NavController) {
                 CircularProgressIndicator()
             } else {
                 Button(
-                    onClick = {},
+                    onClick = {
+                        if (email.value.isEmpty() || password.value.isEmpty()) {
+                            errorMessage.value = "Por favor, completa todos los campos."
+                            return@Button
+                        }
+
+                        coroutineScope.launch {
+                            isLoading.value = true
+                            val isValid = withContext(Dispatchers.IO) {
+                                UserRepository.validateLogin(email.value, password.value)
+                            }
+                            isLoading.value = false
+
+                            if (isValid) {
+                                navController.navigate("Inicio")
+                            } else {
+                                errorMessage.value = "Credenciales incorrectas."
+                            }
+                        }
+                    },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text("Iniciar Sesión")
