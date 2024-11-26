@@ -11,13 +11,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MaterialTheme {
-                // Genera las carreras de muestra
-                val sampleRaces = generateSampleRaces()
-
-                // Pasa las carreras generadas a AppNavHost (si es necesario)
-                AppNavHost(races = sampleRaces)
-            }
         }
     }
 }
