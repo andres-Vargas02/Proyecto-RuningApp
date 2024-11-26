@@ -2,13 +2,16 @@ package com.uptc.runningapp.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.uptc.runningapp.repositories.UserRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -17,6 +20,10 @@ fun SignUpScreen(navController: NavController) {
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
     val confirmPassword = remember { mutableStateOf("") }
+    val isLoading = remember { mutableStateOf(false) }
+    val errorMessage = remember { mutableStateOf("") }
+    val successMessage = remember { mutableStateOf("") }
+    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
@@ -50,7 +57,7 @@ fun SignUpScreen(navController: NavController) {
                 onValueChange = { password.value = it },
                 label = { Text("Contraseña") },
                 modifier = Modifier.fillMaxWidth(),
-                visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation()
+                visualTransformation = PasswordVisualTransformation()
             )
             Spacer(modifier = Modifier.height(16.dp))
             TextField(
@@ -58,14 +65,65 @@ fun SignUpScreen(navController: NavController) {
                 onValueChange = { confirmPassword.value = it },
                 label = { Text("Confirmar Contraseña") },
                 modifier = Modifier.fillMaxWidth(),
-                visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation()
+                visualTransformation = PasswordVisualTransformation()
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Button(
-                onClick = { /* Lógica para registrar usuario */ },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Registrarse")
+            if (isLoading.value) {
+                CircularProgressIndicator()
+            } else {
+                Button(
+                    onClick = {
+                        if (name.value.isEmpty() || email.value.isEmpty() || password.value.isEmpty() || confirmPassword.value.isEmpty()) {
+                            errorMessage.value = "Por favor, completa todos los campos."
+                            return@Button
+                        }
+
+                        if (password.value != confirmPassword.value) {
+                            errorMessage.value = "Las contraseñas no coinciden."
+                            return@Button
+                        }
+
+                        coroutineScope.launch {
+                            isLoading.value = true
+                            errorMessage.value = ""
+                            successMessage.value = ""
+
+                            val isRegistered = withContext(Dispatchers.IO) {
+                                UserRepository.registerUser(
+                                    name = name.value,
+                                    email = email.value,
+                                    password = password.value
+                                )
+                            }
+
+                            isLoading.value = false
+
+                            if (isRegistered) {
+                                successMessage.value = "Registro exitoso. ¡Ahora puedes iniciar sesión!"
+                                navController.navigate("inicio")
+                            } else {
+                                errorMessage.value = "No se pudo registrar el usuario. Intenta nuevamente."
+                            }
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Registrarse")
+                }
+            }
+            if (errorMessage.value.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = errorMessage.value,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+            if (successMessage.value.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = successMessage.value,
+                    color = MaterialTheme.colorScheme.primary
+                )
             }
             Spacer(modifier = Modifier.height(8.dp))
             TextButton(
