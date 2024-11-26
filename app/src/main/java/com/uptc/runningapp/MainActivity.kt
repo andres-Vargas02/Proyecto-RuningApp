@@ -11,8 +11,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MaterialTheme {
-                AppNavHost()
+                AppNavHost(races = listOf())
             }
         }
     }
 }
+
+

@@ -59,7 +59,18 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.constraintlayout)
+    implementation (libs.androidx.constraintlayout.compose)
     implementation(libs.androidx.navigation.compose)
+
+    implementation(libs.material3)
+    implementation(libs.androidx.foundation.layout)
+    implementation(libs.androidx.navigation.compose.v272)
+    implementation(libs.androidx.material.icons.extended)
+    implementation(libs.androidx.runtime)
+    implementation(libs.ui)
+    implementation(libs.androidx.constraintlayout)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -73,5 +84,10 @@ dependencies {
     implementation(libs.ui)
     implementation(libs.mssql.jdbc.v1220jre8)
     implementation(libs.jtds)
+
+
+
+
+
 
 }
