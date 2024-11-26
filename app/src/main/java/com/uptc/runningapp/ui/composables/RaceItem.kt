@@ -9,11 +9,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.uptc.runningapp.R
@@ -37,7 +37,7 @@ fun RaceItem(navController: NavController, race: Race) {
         ConstraintLayout(modifier = Modifier.padding(8.dp)) {
             val (icon, raceInfo) = createRefs()
             Image(
-                painter = painterResource(id = R.drawable.ic_race), // Asegúrate de que este recurso exista
+                painter = painterResource(id = R.drawable.ic_race),
                 contentDescription = "Race Icon",
                 modifier = Modifier
                     .size(48.dp)
