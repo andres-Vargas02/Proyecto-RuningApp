@@ -1,11 +1,18 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
     namespace = "com.uptc.runningapp"
     compileSdk = 35
+
+    buildFeatures {
+        dataBinding = true
+        viewBinding = true
+    }
 
     defaultConfig {
         applicationId = "com.uptc.runningapp"
@@ -84,10 +91,8 @@ dependencies {
     implementation(libs.ui)
     implementation(libs.mssql.jdbc.v1220jre8)
     implementation(libs.jtds)
-
-
-
-
-
+    implementation(libs.hilt.android.v248)
+    kapt(libs.hilt.compiler)
 
 }
+
