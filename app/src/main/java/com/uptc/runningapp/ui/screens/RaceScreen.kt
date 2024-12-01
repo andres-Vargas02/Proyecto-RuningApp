@@ -29,7 +29,7 @@ fun RaceScreen(navController: NavController, races: List<Race>) {
         Column(modifier = Modifier.fillMaxSize().padding(paddingValues).padding(16.dp)) {
             Text("Inicio y detención del seguimiento")
             Button(onClick = { /* lógica para iniciar carrera */ }) {
-                Text("Iniciar Carrera")
+                Text("iniciar Carrera")
             }
             Button(onClick = { /* lógica para detener carrera */ }) {
                 Text("Detener Carrera")
