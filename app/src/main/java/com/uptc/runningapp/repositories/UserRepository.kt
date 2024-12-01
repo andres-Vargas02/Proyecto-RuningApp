@@ -1,73 +1,209 @@
-package com.uptc.runningapp.repositories
-
 import com.uptc.runningapp.data.DatabaseConfig
+import com.uptc.runningapp.model.Achievement
+import com.uptc.runningapp.model.Location
+import com.uptc.runningapp.model.Race
+import com.uptc.runningapp.model.User
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.sql.SQLException
 
 object UserRepository {
-    /**
-     * Valida las credenciales de inicio de sesión de un usuario.
-     * @param email Correo electrónico del usuario.
-     * @param password Contraseña ingresada por el usuario.
-     * @return `true` si las credenciales son correctas, `false` en caso contrario.
-     */
-    fun validateLogin(email: String, password: String): Boolean {
-        val connection = DatabaseConfig.getConnection()
-        var isValid = false
 
-        try {
-            val query = "SELECT password FROM Usuarios WHERE email = ?"
-            val preparedStatement = connection.prepareStatement(query)
-            preparedStatement.setString(1, email)
+    suspend fun registerUser(name: String, email: String, password: String): Boolean {
+        return withContext(Dispatchers.IO) {
+            val connection = DatabaseConfig.getConnection()
+            var isRegistered = false
 
-            val resultSet = preparedStatement.executeQuery()
-            if (resultSet.next()) {
-                val storedPassword = resultSet.getString("password")
-                isValid = storedPassword == password
+            try {
+                val checkQuery = "SELECT email FROM Usuarios WHERE email = ?"
+                val checkStatement = connection.prepareStatement(checkQuery)
+                checkStatement.setString(1, email)
+
+                val checkResult = checkStatement.executeQuery()
+                if (checkResult.next()) {
+                    return@withContext false
+                }
+
+                val insertQuery = "INSERT INTO Usuarios (name, email, password) VALUES (?, ?, ?)"
+                val insertStatement = connection.prepareStatement(insertQuery)
+                insertStatement.setString(1, name)
+                insertStatement.setString(2, email)
+                insertStatement.setString(3, password)
+
+                val rowsInserted = insertStatement.executeUpdate()
+                isRegistered = rowsInserted > 0
+            } catch (e: SQLException) {
+                e.printStackTrace()
+            } finally {
+                connection.close()
             }
-        } catch (e: SQLException) {
-            e.printStackTrace()
-        } finally {
-            connection.close()
-        }
 
-        return isValid
+            return@withContext isRegistered
+        }
     }
 
-    /**
-     * Registra un nuevo usuario en la base de datos.
-     * @param name Nombre completo del usuario.
-     * @param email Correo electrónico del usuario.
-     * @param password Contraseña del usuario.
-     * @return `true` si el registro fue exitoso, `false` en caso de error.
-     */
-    fun registerUser(name: String, email: String, password: String): Boolean {
-        val connection = DatabaseConfig.getConnection()
-        var isRegistered = false
+    suspend fun validateLogin(email: String, password: String): Boolean {
+        return withContext(Dispatchers.IO) {
+            val connection = DatabaseConfig.getConnection()
+            var isValid = false
 
-        try {
-            val checkQuery = "SELECT email FROM Usuarios WHERE email = ?"
-            val checkStatement = connection.prepareStatement(checkQuery)
-            checkStatement.setString(1, email)
+            try {
+                val query = "SELECT password FROM Usuarios WHERE email = ?"
+                val preparedStatement = connection.prepareStatement(query)
+                preparedStatement.setString(1, email)
 
-            val checkResult = checkStatement.executeQuery()
-            if (checkResult.next()) {
-                return false
+                val resultSet = preparedStatement.executeQuery()
+                if (resultSet.next()) {
+                    val storedPassword = resultSet.getString("password")
+                    isValid = storedPassword == password
+                }
+            } catch (e: SQLException) {
+                e.printStackTrace()
+            } finally {
+                connection.close()
             }
 
-            val insertQuery = "INSERT INTO Usuarios (name, email, password) VALUES (?, ?, ?)"
-            val insertStatement = connection.prepareStatement(insertQuery)
-            insertStatement.setString(1, name)
-            insertStatement.setString(2, email)
-            insertStatement.setString(3, password)
-
-            val rowsInserted = insertStatement.executeUpdate()
-            isRegistered = rowsInserted > 0
-        } catch (e: SQLException) {
-            e.printStackTrace()
-        } finally {
-            connection.close()
+            isValid
         }
+    }
 
-        return isRegistered
+    suspend fun getUserById(userId: Int): User? {
+        return withContext(Dispatchers.IO) {
+            val connection = DatabaseConfig.getConnection()
+            var user: User? = null
+
+            try {
+                val query = """
+                    SELECT userId, name, email, profileImage, createdAt 
+                    FROM Usuarios 
+                    WHERE userId = ?
+                """
+                val preparedStatement = connection.prepareStatement(query)
+                preparedStatement.setInt(1, userId)
+
+                val resultSet = preparedStatement.executeQuery()
+
+                if (resultSet.next()) {
+                    val id = resultSet.getString("userId")
+                    val name = resultSet.getString("name")
+                    val email = resultSet.getString("email")
+                    val profileImage = resultSet.getString("profileImage") // Base64 o URL
+                    val createAt = resultSet.getDate("createdAt")
+
+                    user = User(
+                        userId = id,
+                        name = name,
+                        email = email,
+                        profileImage = profileImage,
+                        createAt = createAt,
+                        achievements = getUserAchievements(userId),
+                        races = getUserRaces(userId)
+                    )
+                }
+            } catch (e: SQLException) {
+                e.printStackTrace()
+            } finally {
+                connection.close()
+            }
+
+            user
+        }
+    }
+
+    private suspend fun getUserAchievements(userId: Int): List<Achievement> {
+        return withContext(Dispatchers.IO) {
+            val connection = DatabaseConfig.getConnection()
+            val achievements = mutableListOf<Achievement>()
+
+            try {
+                val query = "SELECT * FROM Achievements WHERE userId = ?"
+                val preparedStatement = connection.prepareStatement(query)
+                preparedStatement.setInt(1, userId)
+
+                val resultSet = preparedStatement.executeQuery()
+                while (resultSet.next()) {
+                    val achievement = Achievement(
+                        achievementId = resultSet.getString("achievement_id"),
+                        title = resultSet.getString("title"),
+                        achievementDate = resultSet.getString("achievement_day"),
+                    )
+                    achievements.add(achievement)
+                }
+            } catch (e: SQLException) {
+                e.printStackTrace()
+            } finally {
+                connection.close()
+            }
+
+            achievements
+        }
+    }
+
+    private suspend fun getUserRaces(userId: Int): List<Race> {
+        return withContext(Dispatchers.IO) {
+            val connection = DatabaseConfig.getConnection()
+            val races = mutableListOf<Race>()
+
+            try {
+                val query = "SELECT * FROM Races WHERE userId = ?"
+                val preparedStatement = connection.prepareStatement(query)
+                preparedStatement.setInt(1, userId)
+
+                val resultSet = preparedStatement.executeQuery()
+                while (resultSet.next()) {
+                    val raceId = resultSet.getInt("raceId")
+                    val raceName = resultSet.getString("raceName")
+                    val distance = resultSet.getFloat("distance")
+                    val duration = resultSet.getLong("duration")
+                    val date = resultSet.getString("date")
+
+                    val locations = getLocationsForRace(raceId)
+
+                    val race = Race(
+                        raceId = raceId,
+                        userId = userId,
+                        raceName = raceName,
+                        distance = distance,
+                        duration = duration,
+                        date = date,
+                        locations = locations
+                    )
+                    races.add(race)
+                }
+            } catch (e: SQLException) {
+                e.printStackTrace()
+            } finally {
+                connection.close()
+            }
+
+            races
+        }
+    }
+
+    private suspend fun getLocationsForRace(raceId: Int): List<Location> {
+        return withContext(Dispatchers.IO) {
+            val connection = DatabaseConfig.getConnection()
+            val locations = mutableListOf<Location>()
+
+            try {
+                val query = "SELECT latitude, longitude FROM Locations WHERE raceId = ?"
+                val preparedStatement = connection.prepareStatement(query)
+                preparedStatement.setInt(1, raceId)
+
+                val resultSet = preparedStatement.executeQuery()
+                while (resultSet.next()) {
+                    val locationId = resultSet.getInt("locationId")
+                    val latitude = resultSet.getDouble("latitude")
+                    val longitude = resultSet.getDouble("longitude")
+                    locations.add(Location(locationId = locationId, latitude = latitude, longitude = longitude))
+                }
+            } catch (e: SQLException) {
+                e.printStackTrace()
+            } finally {
+                connection.close()
+            }
+
+            locations
+        }
     }
 }

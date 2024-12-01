@@ -93,6 +93,12 @@ dependencies {
     implementation(libs.jtds)
     implementation(libs.hilt.android.v248)
     kapt(libs.hilt.compiler)
+    implementation("androidx.compose.runtime:runtime-livedata:1.5.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
+    implementation(libs.androidx.lifecycle.runtime.ktx.v250)
+    implementation(libs.ui.graphics)
+
 
 }
 

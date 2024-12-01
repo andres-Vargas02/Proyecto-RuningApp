@@ -31,7 +31,7 @@ fun RaceItem(navController: NavController, race: Race) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .clickable { navController.navigate("raceDetails/${race.raceId}") },
+            .clickable { navController.navigate("detalle_carrera/${race.raceId}") },
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         ConstraintLayout(modifier = Modifier.padding(8.dp)) {
@@ -95,11 +95,11 @@ fun formatDuration(duration: Long): String {
 @Composable
 fun RaceItemPreview() {
     val navController = rememberNavController()
-    val sampleRace = Race(
-        raceId = "1",
-        distance = 10.5f,
-        duration = 3600,
-        date = "2023-11-25"
-    )
-    RaceItem(navController = navController, race = sampleRace)
+//    val sampleRace = Race(
+//        raceId = "1",
+//        distance = 10.5f,
+//        duration = 3600,
+//        date = "2023-11-25"
+//    )
+//    RaceItem(navController = navController, race = sampleRace)
 }

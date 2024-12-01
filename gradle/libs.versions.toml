@@ -1,5 +1,6 @@
 [versions]
 agp = "8.5.2"
+androidxLifecycleRuntimeKtx = "2.5.0"
 glide = "4.16.0"
 constraintlayoutCompose = "1.1.0"
 foundationLayout = "1.7.5"
@@ -26,10 +27,12 @@ mssqlJdbc = "12.2.0.jre11"
 mssqlJdbcVersion = "12.2.0.jre8"
 mysqlConnectorJava = "8.0.34"
 lifecycleViewmodelKtx = "2.8.4"
+uiGraphics = "<latest_version>"
 
 
 [libraries]
 
+androidx-lifecycle-runtime-ktx-v250 = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidxLifecycleRuntimeKtx" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
 
@@ -69,6 +72,7 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 mssql-jdbc = { module = "com.microsoft.sqlserver:mssql-jdbc", version.ref = "mssqlJdbc" }
 mssql-jdbc-v1220jre8 = { module = "com.microsoft.sqlserver:mssql-jdbc", version.ref = "mssqlJdbcVersion" }
 mysql-connector-java = { module = "mysql:mysql-connector-java", version = "8.0.33" }
+ui-graphics = { module = "androidx.compose.ui:ui-graphics", version.ref = "uiGraphics" }
 
 
 [plugins]

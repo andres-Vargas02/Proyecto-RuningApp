@@ -1,8 +1,11 @@
 package com.uptc.runningapp.repositories
 
 import com.uptc.runningapp.data.DatabaseConfig
+import com.uptc.runningapp.model.Location
 import com.uptc.runningapp.model.Race
 import java.sql.SQLException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 object RaceRepository {
 
@@ -53,7 +56,9 @@ object RaceRepository {
             val resultSet = preparedStatement.executeQuery()
             if (resultSet.next()) {
                 race = Race(
-                    raceId = resultSet.getString("raceId"),
+                    raceId = resultSet.getInt("raceId"),
+                    userId = resultSet.getInt("userId"),
+                    raceName = resultSet.getString("raceName"),
                     distance = resultSet.getFloat("distance"),
                     duration = resultSet.getLong("duration"),
                     date = resultSet.getString("date")
@@ -72,30 +77,49 @@ object RaceRepository {
      * Lista todas las carreras de la base de datos.
      * @return Una lista de objetos `Race`.
      */
-    fun getAllRaces(): List<Race> {
-        val connection = DatabaseConfig.getConnection()
-        val races = mutableListOf<Race>()
+    suspend fun getAllRaces(): List<Race> {
+        return withContext(Dispatchers.IO) {
+            val connection = DatabaseConfig.getConnection()
+            val races = mutableListOf<Race>()
 
-        try {
-            val query = "SELECT * FROM Carreras"
-            val statement = connection.createStatement()
-            val resultSet = statement.executeQuery(query)
+            try {
+                if (connection == null || connection.isClosed) {
+                    throw SQLException("No se pudo establecer una conexión válida con la base de datos.")
+                }
 
-            while (resultSet.next()) {
-                val race = Race(
-                    raceId = resultSet.getString("raceId"),
-                    distance = resultSet.getFloat("distance"),
-                    duration = resultSet.getLong("duration"),
-                    date = resultSet.getString("date")
-                )
-                races.add(race)
+                val query = "SELECT * FROM Carreras"
+                val statement = connection.createStatement()
+                val resultSet = statement.executeQuery(query)
+
+                while (resultSet.next()) {
+                    val race = Race(
+                        raceId = resultSet.getInt("raceId"),
+                        userId = resultSet.getInt("userId"),
+                        raceName = resultSet.getString("raceName"),
+                        distance = resultSet.getFloat("distance"),
+                        duration = resultSet.getLong("duration"),
+                        date = resultSet.getString("date")
+                        //locations = generateFakeLocations()
+                    )
+                    races.add(race)
+                }
+            } catch (e: SQLException) {
+                println("Error al consultar la base de datos: ${e.message}")
+                e.printStackTrace()
+            } finally {
+                connection?.close()
             }
-        } catch (e: SQLException) {
-            e.printStackTrace()
-        } finally {
-            connection.close()
-        }
 
-        return races
+            return@withContext races
+        }
     }
+
+
+    fun generateFakeLocations(): List<Location> {
+        return listOf(
+            Location(locationId = 1, latitude = 40.7128, longitude = -74.0060),
+            Location(locationId = 1, latitude = 34.0522, longitude = -118.2437)
+        )
+    }
+
 }
