@@ -7,6 +7,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -27,11 +32,20 @@ import com.uptc.runningapp.model.Race
  */
 @Composable
 fun RaceItem(navController: NavController, race: Race) {
+    var userName by remember { mutableStateOf("") }
+
+    LaunchedEffect(race.userId) {
+        val user = UserRepository.getUserById(race.userId)
+        if (user != null) {
+            userName = user.name
+        }
+    }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .clickable { navController.navigate("raceDetails/${race.raceId}") },
+            .clickable { navController.navigate("detalle_carrera/${race.raceId}") },
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         ConstraintLayout(modifier = Modifier.padding(8.dp)) {
@@ -55,6 +69,18 @@ fun RaceItem(navController: NavController, race: Race) {
                         top.linkTo(icon.top)
                     }
             ) {
+                Text(
+                    text = "Carrera: ${race.raceName}",
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "Usuario: $userName",
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = "Fecha: ${race.date}",
                     fontWeight = FontWeight.Bold,
@@ -89,17 +115,4 @@ fun formatDuration(duration: Long): String {
     val minutes = (duration % 3600) / 60
     val seconds = duration % 60
     return String.format("%02d:%02d:%02d", hours, minutes, seconds)
-}
-
-@Preview(showBackground = true)
-@Composable
-fun RaceItemPreview() {
-    val navController = rememberNavController()
-    val sampleRace = Race(
-        raceId = "1",
-        distance = 10.5f,
-        duration = 3600,
-        date = "2023-11-25"
-    )
-    RaceItem(navController = navController, race = sampleRace)
 }

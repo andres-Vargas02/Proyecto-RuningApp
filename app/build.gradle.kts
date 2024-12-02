@@ -1,11 +1,19 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
+    id("kotlin-android")
 }
 
 android {
     namespace = "com.uptc.runningapp"
     compileSdk = 35
+
+    buildFeatures {
+        dataBinding = true
+        viewBinding = true
+    }
 
     defaultConfig {
         applicationId = "com.uptc.runningapp"
@@ -84,10 +92,22 @@ dependencies {
     implementation(libs.ui)
     implementation(libs.mssql.jdbc.v1220jre8)
     implementation(libs.jtds)
-
-
-
-
-
+    implementation(libs.hilt.android.v248)
+    kapt(libs.hilt.compiler)
+    implementation("androidx.compose.runtime:runtime-livedata:1.5.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
+    implementation(libs.androidx.lifecycle.runtime.ktx.v250)
+    implementation(libs.ui.graphics)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.runtime.v261)
+    kapt(libs.androidx.room.compiler)
+    implementation(libs.androidx.ui.v150)
+    val room_version = "2.6.1"
+    kapt("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
 
 }
+
