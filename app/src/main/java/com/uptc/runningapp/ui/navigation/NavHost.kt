@@ -2,6 +2,7 @@ package com.uptc.runningapp.ui.navigation
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -15,12 +16,16 @@ import com.uptc.runningapp.ui.screens.RaceScreen
 import com.uptc.runningapp.ui.screens.SignUpScreen
 import com.uptc.runningapp.viewmodel.FeedViewModel
 import com.uptc.runningapp.viewmodel.ProfileViewModel
+import com.uptc.runningapp.viewmodel.ProfileViewModelFactory
 
 @Composable
 fun AppNavHost(races: List<Race>) {
     val navController = rememberNavController()
     val feedViewModel: FeedViewModel = viewModel()
-    val profileViewModel: ProfileViewModel = viewModel()
+    val context = LocalContext.current
+    val profileViewModel: ProfileViewModel = viewModel(
+        factory = ProfileViewModelFactory(context)
+    )
 
     NavHost(navController = navController, startDestination = "login") {
         composable("login") { LoginScreen(navController) }

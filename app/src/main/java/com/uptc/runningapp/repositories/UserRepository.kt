@@ -96,8 +96,8 @@ object UserRepository {
                         email = email,
                         profileImage = profileImage,
                         createAt = createAt,
-                        achievements = getUserAchievements(userId),
-                        races = getUserRaces(userId)
+//                        achievements = getUserAchievements(userId),
+//                        races = getUserRaces(userId)
                     )
                 }
             } catch (e: SQLException) {
@@ -110,20 +110,64 @@ object UserRepository {
         }
     }
 
+    suspend fun getUserByEmail(email: String): User? {
+        return withContext(Dispatchers.IO) {
+            val connection = DatabaseConfig.getConnection()
+            var user: User? = null
+
+            try {
+                val query = """
+                SELECT userId, name, email, profileImage, createdAt 
+                FROM Usuarios 
+                WHERE email = ?
+            """
+                val preparedStatement = connection.prepareStatement(query)
+                preparedStatement.setString(1, email)
+
+                val resultSet = preparedStatement.executeQuery()
+
+                if (resultSet.next()) {
+                    val id = resultSet.getString("userId")
+                    val name = resultSet.getString("name")
+                    val userEmail = resultSet.getString("email")
+                    val profileImage = resultSet.getString("profileImage") // Base64 o URL
+                    val createAt = resultSet.getDate("createdAt")
+
+                    user = User(
+                        userId = id,
+                        name = name,
+                        email = userEmail,
+                        profileImage = profileImage,
+                        createAt = createAt,
+//                        achievements = getUserAchievements(id.toInt()),
+//                        races = getUserRaces(id.toInt())
+                    )
+                }
+            } catch (e: SQLException) {
+                e.printStackTrace()
+            } finally {
+                connection.close()
+            }
+
+            user
+        }
+    }
+
+
     private suspend fun getUserAchievements(userId: Int): List<Achievement> {
         return withContext(Dispatchers.IO) {
             val connection = DatabaseConfig.getConnection()
             val achievements = mutableListOf<Achievement>()
 
             try {
-                val query = "SELECT * FROM Achievements WHERE userId = ?"
+                val query = "SELECT * FROM Resultados WHERE userId = ?"
                 val preparedStatement = connection.prepareStatement(query)
                 preparedStatement.setInt(1, userId)
 
                 val resultSet = preparedStatement.executeQuery()
                 while (resultSet.next()) {
                     val achievement = Achievement(
-                        achievementId = resultSet.getString("achievement_id"),
+                        achievementId = resultSet.getString("resultId"),
                         title = resultSet.getString("title"),
                         achievementDate = resultSet.getString("achievement_day"),
                     )
@@ -145,7 +189,7 @@ object UserRepository {
             val races = mutableListOf<Race>()
 
             try {
-                val query = "SELECT * FROM Races WHERE userId = ?"
+                val query = "SELECT * FROM Carreras WHERE userId = ?"
                 val preparedStatement = connection.prepareStatement(query)
                 preparedStatement.setInt(1, userId)
 
@@ -157,7 +201,7 @@ object UserRepository {
                     val duration = resultSet.getLong("duration")
                     val date = resultSet.getString("date")
 
-                    val locations = getLocationsForRace(raceId)
+                    //val locations = getLocationsForRace(raceId)
 
                     val race = Race(
                         raceId = raceId,
@@ -166,7 +210,7 @@ object UserRepository {
                         distance = distance,
                         duration = duration,
                         date = date,
-                        locations = locations
+                        //locations = locations
                     )
                     races.add(race)
                 }

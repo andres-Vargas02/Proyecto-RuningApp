@@ -8,9 +8,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.navigation.NavController
+import com.uptc.runningapp.data.AppDatabase
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import androidx.compose.ui.platform.LocalContext
+import com.uptc.runningapp.data.UserSession
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -20,6 +24,7 @@ fun LoginScreen(navController: NavController) {
     val isLoading = remember { mutableStateOf(false) }
     val errorMessage = remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -67,7 +72,23 @@ fun LoginScreen(navController: NavController) {
                             isLoading.value = false
 
                             if (isValid) {
-                                navController.navigate("Inicio")
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    val remoteUser = UserRepository.getUserByEmail(email.value)
+                                    if (remoteUser != null) {
+                                        val db = AppDatabase.getDatabase(context)
+                                        val userSessionDao = db.userSessionDao()
+
+                                        val userSession = UserSession(userId = remoteUser.userId.toIntOrNull() ?: 0)
+                                        userSessionDao.insertUserSession(userSession)
+
+                                        withContext(Dispatchers.Main) {
+                                            navController.navigate("Inicio")
+                                        }
+                                    } else {
+                                        withContext(Dispatchers.Main) {
+                                        }
+                                    }
+                                }
                             } else {
                                 errorMessage.value = "Credenciales incorrectas."
                             }

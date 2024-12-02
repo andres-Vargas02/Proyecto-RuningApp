@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+    id("kotlin-android")
 }
 
 android {
@@ -98,7 +99,15 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
     implementation(libs.androidx.lifecycle.runtime.ktx.v250)
     implementation(libs.ui.graphics)
-
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.runtime.v261)
+    kapt(libs.androidx.room.compiler)
+    implementation(libs.androidx.ui.v150)
+    val room_version = "2.6.1"
+    kapt("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
 
 }
 
