@@ -7,7 +7,5 @@ data class User(
     val name: String,
     val email: String,
     val profileImage: String?,
-    val createAt: Date,
-    val achievements: List<Achievement> = listOf(),
-    val races: List<Race> = listOf()
+    val createAt: Date
 )

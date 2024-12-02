@@ -96,8 +96,6 @@ object UserRepository {
                         email = email,
                         profileImage = profileImage,
                         createAt = createAt,
-//                        achievements = getUserAchievements(userId),
-//                        races = getUserRaces(userId)
                     )
                 }
             } catch (e: SQLException) {
@@ -139,8 +137,6 @@ object UserRepository {
                         email = userEmail,
                         profileImage = profileImage,
                         createAt = createAt,
-//                        achievements = getUserAchievements(id.toInt()),
-//                        races = getUserRaces(id.toInt())
                     )
                 }
             } catch (e: SQLException) {
@@ -150,36 +146,6 @@ object UserRepository {
             }
 
             user
-        }
-    }
-
-
-    private suspend fun getUserAchievements(userId: Int): List<Achievement> {
-        return withContext(Dispatchers.IO) {
-            val connection = DatabaseConfig.getConnection()
-            val achievements = mutableListOf<Achievement>()
-
-            try {
-                val query = "SELECT * FROM Resultados WHERE userId = ?"
-                val preparedStatement = connection.prepareStatement(query)
-                preparedStatement.setInt(1, userId)
-
-                val resultSet = preparedStatement.executeQuery()
-                while (resultSet.next()) {
-                    val achievement = Achievement(
-                        achievementId = resultSet.getString("resultId"),
-                        title = resultSet.getString("title"),
-                        achievementDate = resultSet.getString("achievement_day"),
-                    )
-                    achievements.add(achievement)
-                }
-            } catch (e: SQLException) {
-                e.printStackTrace()
-            } finally {
-                connection.close()
-            }
-
-            achievements
         }
     }
 

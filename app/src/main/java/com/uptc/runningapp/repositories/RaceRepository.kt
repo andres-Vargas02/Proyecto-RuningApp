@@ -122,4 +122,45 @@ object RaceRepository {
         )
     }
 
+    private suspend fun getRacesByUser(userId: Int): List<Race> {
+        return withContext(Dispatchers.IO) {
+            val connection = DatabaseConfig.getConnection()
+            val races = mutableListOf<Race>()
+
+            try {
+                val query = "SELECT * FROM Carreras WHERE userId = ?"
+                val preparedStatement = connection.prepareStatement(query)
+                preparedStatement.setInt(1, userId)
+
+                val resultSet = preparedStatement.executeQuery()
+                while (resultSet.next()) {
+                    val raceId = resultSet.getInt("raceId")
+                    val raceName = resultSet.getString("raceName")
+                    val distance = resultSet.getFloat("distance")
+                    val duration = resultSet.getLong("duration")
+                    val date = resultSet.getString("date")
+
+                    //val locations = getLocationsForRace(raceId)
+
+                    val race = Race(
+                        raceId = raceId,
+                        userId = userId,
+                        raceName = raceName,
+                        distance = distance,
+                        duration = duration,
+                        date = date,
+                        //locations = locations
+                    )
+                    races.add(race)
+                }
+            } catch (e: SQLException) {
+                e.printStackTrace()
+            } finally {
+                connection.close()
+            }
+
+            races
+        }
+    }
+
 }
