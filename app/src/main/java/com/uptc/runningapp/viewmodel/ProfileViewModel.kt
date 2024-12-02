@@ -17,7 +17,7 @@ open class ProfileViewModel(private val context: Context) : ViewModel() {
         loadUser()
     }
 
-    private fun loadUser() {
+    fun loadUser() {
         _uiState.value = ProfileUiState(isLoading = true)
         viewModelScope.launch {
             try {
@@ -30,5 +30,9 @@ open class ProfileViewModel(private val context: Context) : ViewModel() {
                 _uiState.value = ProfileUiState(error = "Error loading usuario")
             }
         }
+    }
+
+    fun logout() {
+        _uiState.value = ProfileUiState(user = null)
     }
 }

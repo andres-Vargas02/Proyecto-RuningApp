@@ -9,7 +9,7 @@ import java.sql.SQLException
 
 object UserRepository {
 
-    suspend fun registerUser(name: String, email: String, password: String): Boolean {
+    suspend fun registerUser(name: String, email: String, password: String, profileImage: String): Boolean {
         return withContext(Dispatchers.IO) {
             val connection = DatabaseConfig.getConnection()
             var isRegistered = false
@@ -24,11 +24,12 @@ object UserRepository {
                     return@withContext false
                 }
 
-                val insertQuery = "INSERT INTO Usuarios (name, email, password) VALUES (?, ?, ?)"
+                val insertQuery = "INSERT INTO Usuarios (name, email, password, profileImage) VALUES (?, ?, ?, ?)"
                 val insertStatement = connection.prepareStatement(insertQuery)
                 insertStatement.setString(1, name)
                 insertStatement.setString(2, email)
                 insertStatement.setString(3, password)
+                insertStatement.setString(4, profileImage)
 
                 val rowsInserted = insertStatement.executeUpdate()
                 isRegistered = rowsInserted > 0

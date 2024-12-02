@@ -14,9 +14,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
 import com.uptc.runningapp.model.User
 import com.uptc.runningapp.ui.composables.BottomBar
 import com.uptc.runningapp.ui.composables.TopBar
@@ -26,24 +24,24 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import android.util.Base64
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.text.font.FontWeight
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.uptc.runningapp.ui.state.ProfileUiState
 import com.uptc.runningapp.viewmodel.ProfileViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(navController: NavController, viewModel: ProfileViewModel) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
     val user = uiState.value.user
+
+    LaunchedEffect(key1 = true) {
+        viewModel.loadUser()
+    }
 
     Scaffold(
         topBar = { TopBar("Perfil") },
@@ -54,6 +52,7 @@ fun ProfileScreen(navController: NavController, viewModel: ProfileViewModel) {
                 ProfileHeader(user)
                 Spacer(modifier = Modifier.height(16.dp))
                 UserInfo(user)
+                LogoutButton(navController, viewModel)
             } else {
                 Text(text = "Cargando perfil...", style = MaterialTheme.typography.bodyLarge)
             }
@@ -106,5 +105,22 @@ fun decodeBase64ToBitmap(base64String: String): Bitmap? {
     } catch (e: Exception) {
         e.printStackTrace()
         null
+    }
+}
+
+@Composable
+fun LogoutButton(navController: NavController, viewModel: ProfileViewModel) {
+    Button(
+        onClick = {
+            viewModel.logout()
+            navController.navigate("login") {
+                popUpTo("profile") { inclusive = true }
+            }
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Text("Cerrar sesión")
     }
 }

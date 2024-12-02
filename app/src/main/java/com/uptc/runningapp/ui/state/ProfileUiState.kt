@@ -9,9 +9,7 @@ data class ProfileUiState(
         name = "Default User",
         email = "default@example.com",
         profileImage = "",
-        createAt = Date(),
-        achievements = listOf(),
-        races = listOf()
+        createAt = Date()
     ),
     val isLoading: Boolean = false,
     val error: String? = null

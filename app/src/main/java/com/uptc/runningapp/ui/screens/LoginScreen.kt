@@ -80,7 +80,6 @@ fun LoginScreen(navController: NavController) {
 
                                         val userSession = UserSession(userId = remoteUser.userId.toIntOrNull() ?: 0)
                                         userSessionDao.insertUserSession(userSession)
-
                                         withContext(Dispatchers.Main) {
                                             navController.navigate("Inicio")
                                         }
