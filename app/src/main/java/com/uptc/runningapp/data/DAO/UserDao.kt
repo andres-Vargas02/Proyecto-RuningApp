@@ -10,7 +10,7 @@ interface UserSessionDao {
     @Insert
     suspend fun insertUserSession(userSession: UserSession)
 
-    @Query("SELECT userId FROM UserSession LIMIT 1")
+    @Query("SELECT userId FROM UserSession ORDER BY id DESC LIMIT 1")
     suspend fun getUserId(): Int?
 
     @Query("DELETE FROM UserSession")

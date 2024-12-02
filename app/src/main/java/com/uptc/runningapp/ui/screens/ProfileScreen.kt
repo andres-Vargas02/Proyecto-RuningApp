@@ -63,7 +63,7 @@ fun ProfileScreen(navController: NavController, viewModel: ProfileViewModel) {
 
 @Composable
 fun ProfileHeader(user: User) {
-    val base64Image = user.profileImage
+    val base64Image = user.profileImage?: ""
     val bitmap = remember(base64Image) { decodeBase64ToBitmap(base64Image) }
 
 
@@ -75,7 +75,6 @@ fun ProfileHeader(user: User) {
     ) {
         bitmap?.let {
             Image(
-                //painter = painterResource(user.profileImage),
                 bitmap = it.asImageBitmap(),
                 contentDescription = "User Image",
                 modifier = Modifier
@@ -95,7 +94,7 @@ fun UserInfo(user: User) {
         Spacer(modifier = Modifier.height(8.dp))
         Text(text = "Correo: ${user.email}", style = MaterialTheme.typography.bodyMedium)
         Spacer(modifier = Modifier.height(8.dp))
-        Text(text = "Fecha de creación: ${user.userId}", style = MaterialTheme.typography.bodyMedium) // Puedes formatear la fecha si es necesario
+        Text(text = "Fecha de creación: ${user.createAt}", style = MaterialTheme.typography.bodyMedium)
     }
 }
 
