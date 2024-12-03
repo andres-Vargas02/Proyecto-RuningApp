@@ -165,6 +165,7 @@ object UserRepository {
                     val distance = resultSet.getFloat("distance")
                     val duration = resultSet.getLong("duration")
                     val date = resultSet.getString("date")
+                    val profileImage = resultSet.getString("profileImage")
 
                     val race = Race(
                         raceId = raceId,
@@ -173,6 +174,7 @@ object UserRepository {
                         distance = distance,
                         duration = duration,
                         date = date,
+                        profileImage = profileImage
                     )
                     races.add(race)
                 }

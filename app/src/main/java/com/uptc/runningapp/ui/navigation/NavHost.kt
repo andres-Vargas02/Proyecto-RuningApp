@@ -32,7 +32,7 @@ fun AppNavHost(races: List<Race>) {
         composable("registro") { SignUpScreen(navController) }
         composable("inicio") { FeedScreen(navController, viewModel = feedViewModel) }
         composable("perfil") { ProfileScreen(navController, viewModel = profileViewModel)}
-        composable("registro_carrera") { RaceScreen(navController, races) }
+        composable("registro_carrera") { RaceScreen(navController, profileViewModel) }
         composable("detalle_carrera/{raceId}") { backStackEntry ->
             val raceId = backStackEntry.arguments?.getString("raceId")
             //val selectedRace = feedViewModel.uiState.value.races.find { it.raceId == raceId }

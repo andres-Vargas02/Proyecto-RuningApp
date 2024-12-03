@@ -13,19 +13,22 @@ object RaceRepository {
      * @param race Objeto `Race` que contiene la información de la carrera.
      * @return `true` si la inserción fue exitosa, `false` en caso contrario.
      */
-    fun addRace(race: Race): Boolean {
+    suspend fun addRace(race: Race): Boolean = withContext(Dispatchers.IO) {
         val connection = DatabaseConfig.getConnection()
         var isInserted = false
 
         try {
             val query = """
-                INSERT INTO Carreras (distance, duration, date) 
-                VALUES (?, ?, ?)
-            """
+            INSERT INTO Carreras (userId, raceName, distance, duration, date, profileImage) 
+            VALUES (?, ?, ?, ?, ?, ?)
+        """
             val preparedStatement = connection.prepareStatement(query)
-            preparedStatement.setFloat(1, race.distance)
-            preparedStatement.setLong(2, race.duration)
-            preparedStatement.setString(3, race.date)
+            preparedStatement.setInt(1, race.userId)
+            preparedStatement.setString(2, race.raceName)
+            preparedStatement.setFloat(3, race.distance)
+            preparedStatement.setLong(4, race.duration)
+            preparedStatement.setString(5, race.date)
+            preparedStatement.setString(6, race.profileImage)
 
             val rowsInserted = preparedStatement.executeUpdate()
             isInserted = rowsInserted > 0
@@ -35,8 +38,9 @@ object RaceRepository {
             connection.close()
         }
 
-        return isInserted
+        return@withContext isInserted
     }
+
 
     /**
      * Obtiene una carrera específica por su ID.
@@ -60,7 +64,8 @@ object RaceRepository {
                     raceName = resultSet.getString("raceName"),
                     distance = resultSet.getFloat("distance"),
                     duration = resultSet.getLong("duration"),
-                    date = resultSet.getString("date")
+                    date = resultSet.getString("date"),
+                    profileImage = resultSet.getString("profileImage"),
                 )
             }
         } catch (e: SQLException) {
@@ -86,7 +91,7 @@ object RaceRepository {
                     throw SQLException("No se pudo establecer una conexión válida con la base de datos.")
                 }
 
-                val query = "SELECT * FROM Carreras"
+                val query = "SELECT * FROM Carreras ORDER BY raceId DESC"
                 val statement = connection.createStatement()
                 val resultSet = statement.executeQuery(query)
 
@@ -97,8 +102,9 @@ object RaceRepository {
                         raceName = resultSet.getString("raceName"),
                         distance = resultSet.getFloat("distance"),
                         duration = resultSet.getLong("duration"),
-                        date = resultSet.getString("date")
-                    )
+                        date = resultSet.getString("date"),
+                        profileImage = resultSet.getString("profileImage"),
+                        )
                     races.add(race)
                 }
             } catch (e: SQLException) {
@@ -129,7 +135,7 @@ object RaceRepository {
                     val distance = resultSet.getFloat("distance")
                     val duration = resultSet.getLong("duration")
                     val date = resultSet.getString("date")
-
+                    val profileImage = resultSet.getString("profileImage")
 
                     val race = Race(
                         raceId = raceId,
@@ -138,6 +144,7 @@ object RaceRepository {
                         distance = distance,
                         duration = duration,
                         date = date,
+                        profileImage = profileImage
                     )
                     races.add(race)
                 }
