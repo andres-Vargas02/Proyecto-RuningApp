@@ -12,21 +12,21 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.uptc.runningapp.model.Race
-import com.uptc.runningapp.ui.composables.BottomBar
-import com.uptc.runningapp.ui.composables.TopBar
-import com.uptc.runningapp.ui.composables.RaceItem
-import com.uptc.runningapp.ui.composables.generateSampleRaces
+import com.uptc.runningapp.model.User
+import com.uptc.runningapp.ui.composables.*
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(navController: NavController, races: List<Race>) {
+fun ProfileScreen(navController: NavController, races: List<Pair<Race, User>>) {
     Scaffold(
         topBar = { TopBar("Perfil") },
         bottomBar = { BottomBar(navController) }
     ) { padding ->
-        LazyColumn(modifier = Modifier.padding(padding)) {
-            items(races) { race ->
-                RaceItem(navController = navController, race = race)
+        LazyColumn(
+            contentPadding = padding,
+            modifier = Modifier.padding(horizontal = 16.dp)
+        ) {
+            items(races) { (race, user) ->
+                RaceItem(navController = navController, race = race, user = user)
                 HorizontalDivider(thickness = 0.5.dp, color = Color.Gray)
             }
         }
@@ -38,5 +38,6 @@ fun ProfileScreen(navController: NavController, races: List<Race>) {
 fun ProfileScreenPreview() {
     val navController = rememberNavController()
     val races = generateSampleRaces()
+
     ProfileScreen(navController = navController, races = races)
 }

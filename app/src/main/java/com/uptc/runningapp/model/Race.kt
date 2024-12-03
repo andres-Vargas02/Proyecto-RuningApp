@@ -5,5 +5,8 @@ data class Race(
     val distance: Float,
     val duration: Long,
     val date: String,
-    val locations: List<Location> = listOf()
+    val photo: Int,
+    val locations: List<Location> = listOf(),
+    val isPersonalBest: Boolean = false
 )
+

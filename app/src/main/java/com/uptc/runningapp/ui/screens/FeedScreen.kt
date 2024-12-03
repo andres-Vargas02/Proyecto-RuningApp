@@ -12,20 +12,21 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.uptc.runningapp.model.Race
-import com.uptc.runningapp.ui.composables.BottomBar
-import com.uptc.runningapp.ui.composables.TopBar
-import com.uptc.runningapp.ui.composables.RaceItem
-import com.uptc.runningapp.ui.composables.generateSampleRaces
+import com.uptc.runningapp.model.User
+import com.uptc.runningapp.ui.composables.*
 
 @Composable
-fun FeedScreen(navController: NavController, races: List<Race>) {
+fun FeedScreen(navController: NavController, races: List<Pair<Race, User>>) {
     Scaffold(
         topBar = { TopBar("Inicio") },
         bottomBar = { BottomBar(navController) }
     ) { padding ->
-        LazyColumn(modifier = Modifier.padding(padding)) {
-            items(races) { race ->
-                RaceItem(navController = navController, race = race)
+        LazyColumn(
+            contentPadding = padding,
+            modifier = Modifier.padding(horizontal = 16.dp)
+        ) {
+            items(races) { (race, user) ->
+                RaceItem(navController = navController, race = race, user = user)
                 HorizontalDivider(thickness = 0.5.dp, color = Color.Gray)
             }
         }
@@ -35,7 +36,7 @@ fun FeedScreen(navController: NavController, races: List<Race>) {
 @Preview(showBackground = true)
 @Composable
 fun FeedScreenPreview() {
-    val fakeNavController = rememberNavController()
-    val sampleRaces = generateSampleRaces()
-    FeedScreen(navController = fakeNavController, races = sampleRaces)
+    val navController = rememberNavController()
+    val races = generateSampleRaces()
+    FeedScreen(navController = navController, races = races)
 }

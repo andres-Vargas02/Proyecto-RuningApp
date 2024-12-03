@@ -22,6 +22,7 @@ constraintlayout = "2.2.0"
 mssqlJdbc = "12.2.0.jre11"
 mssqlJdbcVersion = "12.2.0.jre8"
 mysqlConnectorJava = "8.0.34"
+playServicesLocation = "21.3.0"
 
 
 [libraries]
@@ -58,6 +59,7 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 mssql-jdbc = { module = "com.microsoft.sqlserver:mssql-jdbc", version.ref = "mssqlJdbc" }
 mssql-jdbc-v1220jre8 = { module = "com.microsoft.sqlserver:mssql-jdbc", version.ref = "mssqlJdbcVersion" }
 mysql-connector-java = { module = "mysql:mysql-connector-java", version = "8.0.33" }
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
 
 
 [plugins]
