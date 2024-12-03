@@ -15,7 +15,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.uptc.runningapp.model.Race
-import com.uptc.runningapp.ui.composables.generateSampleRaces
 import com.uptc.runningapp.ui.composables.TopBar
 import com.uptc.runningapp.ui.composables.BottomBar
 
@@ -41,6 +40,6 @@ fun RaceScreen(navController: NavController, races: List<Race>) {
 @Preview(showBackground = true)
 @Composable
 fun RaceScreenPreview() {
-    val races = generateSampleRaces()
-    RaceScreen(navController = NavController(LocalContext.current), races = races)
+    //val races = generateSampleRaces()
+    //RaceScreen(navController = NavController(LocalContext.current), races = races)
 }

@@ -17,7 +17,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.uptc.runningapp.R
-import com.uptc.runningapp.model.Location
 import com.uptc.runningapp.model.Race
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -68,40 +67,3 @@ fun BottomBar(navController: NavController) {
         }
     }
 }
-
-fun generateSampleRaces(): List<Race> {
-    return listOf(
-        Race(
-            raceId = "1",
-            distance = 5.0f,
-            duration = 1800L,
-            date = "2024-01-01",
-            locations = listOf(
-                Location(latitude = 5.057, longitude = -73.345),
-                Location(latitude = 5.058, longitude = -73.346)
-            )
-        ),
-        Race(
-            raceId = "2",
-            distance = 10.0f,
-            duration = 3600L,
-            date = "2024-02-01",
-            locations = listOf(
-                Location(latitude = 5.059, longitude = -73.347),
-                Location(latitude = 5.060, longitude = -73.348)
-            )
-        ),
-        Race(
-            raceId = "3",
-            distance = 21.1f,
-            duration = 7200L,
-            date = "2024-03-01",
-            locations = listOf(
-                Location(latitude = 5.061, longitude = -73.349),
-                Location(latitude = 5.062, longitude = -73.350)
-            )
-        )
-    )
-}
-
-
