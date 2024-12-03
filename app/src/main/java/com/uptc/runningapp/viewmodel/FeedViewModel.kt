@@ -17,7 +17,7 @@ class FeedViewModel : ViewModel() {
         loadRaces()
     }
 
-    private fun loadRaces() {
+    fun loadRaces() {
         _uiState.value = FeedUiState(isLoading = true)
         viewModelScope.launch {
             try {
