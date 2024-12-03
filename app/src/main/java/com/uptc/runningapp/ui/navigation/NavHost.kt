@@ -34,12 +34,11 @@ fun AppNavHost(races: List<Race>) {
         composable("perfil") { ProfileScreen(navController, viewModel = profileViewModel)}
         composable("registro_carrera") { RaceScreen(navController, races) }
         composable("detalle_carrera/{raceId}") { backStackEntry ->
-            val raceId = backStackEntry.arguments?.getString("raceId")
-            //val selectedRace = feedViewModel.uiState.value.races.find { it.raceId == raceId }
-            //val selectedRace = races.find { it.raceId == raceId }
-            val selectedRace = 1
+            val raceId = backStackEntry.arguments?.getString("raceId")?.toIntOrNull()
+            val selectedRace = races.find { it.raceId == raceId }
+
             if (selectedRace != null) {
-                //DetailScreen(navController, selectedRace)
+                DetailScreen(navController, selectedRace)
             } else {
                 Text("Carrera no encontrada")
             }
