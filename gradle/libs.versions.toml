@@ -31,6 +31,8 @@ mysqlConnectorJava = "8.0.34"
 lifecycleViewmodelKtx = "2.8.4"
 uiGraphics = "<latest_version>"
 uiVersion = "1.5.0"
+roomCommon = "2.6.1"
+roomRuntimeAndroid = "2.7.0-alpha11"
 
 
 [libraries]
@@ -81,6 +83,8 @@ mssql-jdbc = { module = "com.microsoft.sqlserver:mssql-jdbc", version.ref = "mss
 mssql-jdbc-v1220jre8 = { module = "com.microsoft.sqlserver:mssql-jdbc", version.ref = "mssqlJdbcVersion" }
 mysql-connector-java = { module = "mysql:mysql-connector-java", version = "8.0.33" }
 ui-graphics = { module = "androidx.compose.ui:ui-graphics", version.ref = "uiGraphics" }
+androidx-room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }
+androidx-room-runtime-android = { group = "androidx.room", name = "room-runtime-android", version.ref = "roomRuntimeAndroid" }
 
 
 [plugins]

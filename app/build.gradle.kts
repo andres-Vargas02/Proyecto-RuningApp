@@ -78,6 +78,8 @@ dependencies {
     implementation(libs.androidx.runtime)
     implementation(libs.ui)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.room.common)
+    implementation(libs.androidx.room.runtime.android)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

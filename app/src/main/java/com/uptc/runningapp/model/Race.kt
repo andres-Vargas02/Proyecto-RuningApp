@@ -8,3 +8,6 @@ data class Race(
     val duration: Long,
     val date: String,
 )
+
+//val raceImage: String?,
+//val isPersonalBest: Boolean,

@@ -8,11 +8,6 @@ import kotlinx.coroutines.withContext
 
 object RaceRepository {
 
-    /**
-     * Inserta una nueva carrera en la base de datos.
-     * @param race Objeto `Race` que contiene la información de la carrera.
-     * @return `true` si la inserción fue exitosa, `false` en caso contrario.
-     */
     fun addRace(race: Race): Boolean {
         val connection = DatabaseConfig.getConnection()
         var isInserted = false
@@ -40,17 +35,17 @@ object RaceRepository {
 
     /**
      * Obtiene una carrera específica por su ID.
-     * @param raceId Identificador único de la carrera.
+     * @param raceId Identificador único de la carrera (Int).
      * @return Objeto `Race` si se encuentra la carrera, o `null` si no existe.
      */
-    fun getRaceById(raceId: String): Race? {
+    fun getRaceById(raceId: Int): Race? { // Cambiado de String a Int
         val connection = DatabaseConfig.getConnection()
         var race: Race? = null
 
         try {
             val query = "SELECT * FROM Carreras WHERE raceId = ?"
             val preparedStatement = connection.prepareStatement(query)
-            preparedStatement.setString(1, raceId)
+            preparedStatement.setInt(1, raceId) // Cambiado a setInt
 
             val resultSet = preparedStatement.executeQuery()
             if (resultSet.next()) {
@@ -72,10 +67,6 @@ object RaceRepository {
         return race
     }
 
-    /**
-     * Lista todas las carreras de la base de datos.
-     * @return Una lista de objetos `Race`.
-     */
     suspend fun getAllRaces(): List<Race> {
         return withContext(Dispatchers.IO) {
             val connection = DatabaseConfig.getConnection()
@@ -124,20 +115,13 @@ object RaceRepository {
 
                 val resultSet = preparedStatement.executeQuery()
                 while (resultSet.next()) {
-                    val raceId = resultSet.getInt("raceId")
-                    val raceName = resultSet.getString("raceName")
-                    val distance = resultSet.getFloat("distance")
-                    val duration = resultSet.getLong("duration")
-                    val date = resultSet.getString("date")
-
-
                     val race = Race(
-                        raceId = raceId,
+                        raceId = resultSet.getInt("raceId"),
                         userId = userId,
-                        raceName = raceName,
-                        distance = distance,
-                        duration = duration,
-                        date = date,
+                        raceName = resultSet.getString("raceName"),
+                        distance = resultSet.getFloat("distance"),
+                        duration = resultSet.getLong("duration"),
+                        date = resultSet.getString("date"),
                     )
                     races.add(race)
                 }
