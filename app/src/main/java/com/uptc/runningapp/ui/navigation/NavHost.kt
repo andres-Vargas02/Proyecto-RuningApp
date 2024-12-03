@@ -2,6 +2,7 @@ package com.uptc.runningapp.ui.navigation
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -17,7 +18,6 @@ import com.uptc.runningapp.ui.screens.SignUpScreen
 import com.uptc.runningapp.viewmodel.FeedViewModel
 import com.uptc.runningapp.viewmodel.ProfileViewModel
 import com.uptc.runningapp.viewmodel.ProfileViewModelFactory
-
 @Composable
 fun AppNavHost(races: List<Race>) {
     val navController = rememberNavController()
@@ -26,20 +26,22 @@ fun AppNavHost(races: List<Race>) {
     val profileViewModel: ProfileViewModel = viewModel(
         factory = ProfileViewModelFactory(context)
     )
+    val uiState = feedViewModel.uiState.collectAsState()
 
     NavHost(navController = navController, startDestination = "login") {
         composable("login") { LoginScreen(navController) }
         composable("registro") { SignUpScreen(navController) }
         composable("inicio") { FeedScreen(navController, viewModel = feedViewModel) }
-        composable("perfil") { ProfileScreen(navController, viewModel = profileViewModel)}
-        composable("registro_carrera") { RaceScreen(navController, races) }
+        composable("perfil") { ProfileScreen(navController, viewModel = profileViewModel) }
+        composable("registro_carrera") {
+            RaceScreen(navController)
+        }
         composable("detalle_carrera/{raceId}") { backStackEntry ->
-            val raceId = backStackEntry.arguments?.getString("raceId")
-            //val selectedRace = feedViewModel.uiState.value.races.find { it.raceId == raceId }
-            //val selectedRace = races.find { it.raceId == raceId }
-            val selectedRace = 1
+            val raceId = backStackEntry.arguments?.getString("raceId")?.toIntOrNull()
+            val selectedRace = races.find { it.raceId == raceId }
+
             if (selectedRace != null) {
-                //DetailScreen(navController, selectedRace)
+                DetailScreen(navController, selectedRace)
             } else {
                 Text("Carrera no encontrada")
             }
