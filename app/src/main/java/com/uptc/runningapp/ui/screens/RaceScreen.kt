@@ -52,7 +52,11 @@ fun RaceScreen(navController: NavController, profileViewModel: ProfileViewModel)
     val calendar = Calendar.getInstance()
     val coroutineScope = rememberCoroutineScope()
 
+    val weather by profileViewModel.weatherState.collectAsState()
 
+    LaunchedEffect(Unit) {
+        profileViewModel.loadWeather()
+    }
 
     // Date Picker
     val datePickerDialog = DatePickerDialog(
@@ -86,6 +90,16 @@ fun RaceScreen(navController: NavController, profileViewModel: ProfileViewModel)
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
+            weather?.let {
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
             // Race Name
             TextField(
                 value = raceName,
