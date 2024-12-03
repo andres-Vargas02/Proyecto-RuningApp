@@ -7,5 +7,4 @@ data class Race(
     val distance: Float,
     val duration: Long,
     val date: String,
-    val locations: List<Location>? = null
 )

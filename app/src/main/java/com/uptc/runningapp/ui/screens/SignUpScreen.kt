@@ -22,6 +22,8 @@ import android.util.Base64
 import androidx.compose.foundation.Image
 import androidx.compose.ui.graphics.asImageBitmap
 import android.content.Context
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.ui.platform.LocalContext
 import com.uptc.runningapp.data.AppDatabase
 import com.uptc.runningapp.data.UserSession
@@ -47,6 +49,8 @@ fun SignUpScreen(navController: NavController) {
         }
     }
 
+    val scrollState = rememberScrollState()
+
     Scaffold(
         topBar = {
             TopAppBar(title = { Text("Registro de Usuario") })
@@ -56,7 +60,8 @@ fun SignUpScreen(navController: NavController) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(16.dp),
+                .padding(16.dp)
+                .verticalScroll(scrollState),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

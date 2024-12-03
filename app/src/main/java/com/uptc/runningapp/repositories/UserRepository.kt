@@ -1,6 +1,4 @@
 import com.uptc.runningapp.data.DatabaseConfig
-import com.uptc.runningapp.model.Achievement
-import com.uptc.runningapp.model.Location
 import com.uptc.runningapp.model.Race
 import com.uptc.runningapp.model.User
 import kotlinx.coroutines.Dispatchers
@@ -168,8 +166,6 @@ object UserRepository {
                     val duration = resultSet.getLong("duration")
                     val date = resultSet.getString("date")
 
-                    //val locations = getLocationsForRace(raceId)
-
                     val race = Race(
                         raceId = raceId,
                         userId = userId,
@@ -177,7 +173,6 @@ object UserRepository {
                         distance = distance,
                         duration = duration,
                         date = date,
-                        //locations = locations
                     )
                     races.add(race)
                 }
@@ -188,33 +183,6 @@ object UserRepository {
             }
 
             races
-        }
-    }
-
-    private suspend fun getLocationsForRace(raceId: Int): List<Location> {
-        return withContext(Dispatchers.IO) {
-            val connection = DatabaseConfig.getConnection()
-            val locations = mutableListOf<Location>()
-
-            try {
-                val query = "SELECT latitude, longitude FROM Locations WHERE raceId = ?"
-                val preparedStatement = connection.prepareStatement(query)
-                preparedStatement.setInt(1, raceId)
-
-                val resultSet = preparedStatement.executeQuery()
-                while (resultSet.next()) {
-                    val locationId = resultSet.getInt("locationId")
-                    val latitude = resultSet.getDouble("latitude")
-                    val longitude = resultSet.getDouble("longitude")
-                    locations.add(Location(locationId = locationId, latitude = latitude, longitude = longitude))
-                }
-            } catch (e: SQLException) {
-                e.printStackTrace()
-            } finally {
-                connection.close()
-            }
-
-            locations
         }
     }
 }

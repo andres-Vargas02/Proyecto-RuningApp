@@ -17,7 +17,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.uptc.runningapp.R
-import com.uptc.runningapp.model.Location
 import com.uptc.runningapp.model.Race
 
 @OptIn(ExperimentalMaterial3Api::class)

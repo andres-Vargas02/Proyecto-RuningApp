@@ -1,7 +1,6 @@
 package com.uptc.runningapp.repositories
 
 import com.uptc.runningapp.data.DatabaseConfig
-import com.uptc.runningapp.model.Location
 import com.uptc.runningapp.model.Race
 import java.sql.SQLException
 import kotlinx.coroutines.Dispatchers
@@ -99,7 +98,6 @@ object RaceRepository {
                         distance = resultSet.getFloat("distance"),
                         duration = resultSet.getLong("duration"),
                         date = resultSet.getString("date")
-                        //locations = generateFakeLocations()
                     )
                     races.add(race)
                 }
@@ -112,14 +110,6 @@ object RaceRepository {
 
             return@withContext races
         }
-    }
-
-
-    fun generateFakeLocations(): List<Location> {
-        return listOf(
-            Location(locationId = 1, latitude = 40.7128, longitude = -74.0060),
-            Location(locationId = 1, latitude = 34.0522, longitude = -118.2437)
-        )
     }
 
     private suspend fun getRacesByUser(userId: Int): List<Race> {
@@ -140,7 +130,6 @@ object RaceRepository {
                     val duration = resultSet.getLong("duration")
                     val date = resultSet.getString("date")
 
-                    //val locations = getLocationsForRace(raceId)
 
                     val race = Race(
                         raceId = raceId,
@@ -149,7 +138,6 @@ object RaceRepository {
                         distance = distance,
                         duration = duration,
                         date = date,
-                        //locations = locations
                     )
                     races.add(race)
                 }
